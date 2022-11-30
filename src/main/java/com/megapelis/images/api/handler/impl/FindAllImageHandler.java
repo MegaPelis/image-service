@@ -10,6 +10,8 @@ import com.megapelis.images.api.handler.ImageHandler;
 import com.megapelis.images.model.dto.request.FindAllImageRQ;
 import com.megapelis.images.model.dto.request.generic.Request;
 import com.megapelis.images.model.dto.response.Response;
+import com.megapelis.images.model.dto.response.imp.FindAllImageRS;
+import com.megapelis.images.model.dto.response.imp.FindByIdImageRS;
 import com.megapelis.images.model.entity.Image;
 import com.megapelis.images.model.enums.ImageStatusEnum;
 import com.megapelis.images.util.ImageCommon;
@@ -60,7 +62,8 @@ public class FindAllImageHandler extends ImageHandler implements RequestHandler<
     public Response handleRequest(Request request, Context context) {
         db = AmazonDynamoDBClientBuilder.defaultClient();
         mapper = new DynamoDBMapper(db);
-        List<Image> Images = mapper.scan(Image.class, new DynamoDBScanExpression());
-        return ImageCommon.buildResponse(request, ImageStatusEnum.SUCCESS, Images);
+        FindAllImageRS findAllImageRS = new FindAllImageRS();
+        findAllImageRS.setFindAll(mapper.scan(FindByIdImageRS.class, new DynamoDBScanExpression()));
+        return ImageCommon.buildResponse(request, ImageStatusEnum.SUCCESS, findAllImageRS);
     }
 }
